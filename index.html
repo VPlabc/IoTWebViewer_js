@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Gateway - VPlab.local</title>
+      <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="img/vpfavicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="img/vpfavicon-16x16.png"> 
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+      <link href="css/main.css?v=TIMESTAMP" rel="stylesheet">
+   </head>
+   <body>
+      <div class="d-flex flex-column" style="width: 4.5rem;"  id="tabs">
+         <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+            <li><a href="https://www.vplab.local" target="_blank" class="nav-link py-3 border-bottom"><img class="logo" src="img/VPlab_logo.png"></a></li>
+            <li><a id="home" href="#home"  class="nav-link py-3 border-bottom active"><svg class="bi" width="24" height="24" transform="rotate(180)"><use xlink:href="#home_icon"></use></svg></a>
+            </li>
+            <!-- <li><a id="sd_card"  href="#sd_card"  class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#sd_card_icon"></use></svg></a></li> -->
+            <li><a id="console"  href="#console"  class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#console_icon"></use></svg></a></li>
+            <li><a id="advanced" href="#advanced" class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"> <use xlink:href="#gear_fill_icon"></use></svg></a></li>
+            <li><a id="features" href="#features" class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#info_icon"></use></svg></a></li>
+         </ul>
+      </div>
+      <div class="d-flex vplab_divider" id="vplab_divider"></div>
+      <div class="a_tab m-2 d-flex flex-column align-items-stretch" style="flex: 1;" id="tab_home">
+         <div class="row  p-3"> 
+            <div class="col-md-3 col-6 mt-4 mt-md-0">
+            <h1 class="text-vplab-light text-capitalize" id="Connect_status">Offline</h1>
+            <span class="text-muted" id="current_file_name"></span>
+            <span class="" id="busy_box"></span>
+            </div>
+            <div class="col-md-3 col-6 mt-4 mt-md-0">
+            <h1 class="text-vplab-light text-capitalize" id="Sensor_status">Offline</h1>
+            <span class="text-muted" id="current_file_name"></span>
+            <span class="" id="busy_box"></span>
+            </div>
+         </div>
+         <style>
+            .content {
+                padding: 50px;
+            }
+            .card-grid {
+                max-width: 800px;
+                margin: 0 auto;
+                display: grid;
+                grid-gap: 2rem;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            .card {
+               border-radius: 25px;
+               padding: 20px;
+                background-color: white;
+                box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
+            }
+            .card-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #034078
+            }
+            .reading {
+               align-self: center;
+                font-size: 1.2rem;
+                color: #1282A2;
+            }
+            #messages {
+               margin-top: 12px;
+               margin-bottom: 12px;
+               padding: 12px;
+               width:100%;
+               display: inline-block;
+               border:1px solid black;
+               max-height: 250px;
+               min-height: 250px;
+               overflow: scroll;
+            }
+            #messages span {
+               overflow-y: scroll;
+               overflow: scroll;
+            }
+         </style>
+         <div class="row  p-4">
+            <div class="col-sm-6 col-md-6 mb-5">
+                <div class="card">
+                    <h1 class="text-primary stationaryDistance_group" style="align-self: center"> Stationary</h1>  
+                  <div class=" d-flex"><span class="text-muted">distance:</span><h2 style="align-self: center" class="reading"><span id="StationaryDistance"></span> cm</h2></div>   
+                  <div class=" d-flex"><span class="text-muted">energy:</span><p  style="align-self: center" class="reading"><span id="StationaryEnergy"></span></p></div>
+                 
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 mb-5">
+                <div class="card">
+                    <h1 class="text-primary stationaryDistance_group" style="align-self: center"> Moving</h1>
+                    <div class=" d-flex"><span class="text-muted">distance:</span><h2 class="reading"><span id="MovingDistance"></span> cm</h2></div>   
+                    <div class=" d-flex"><span class="text-muted">energy:</span><p class="reading"><span id="MovingEnergy"></span></p></div>
+                   
+                </div>
+            </div>   
+         </div>  
+         <!-- <div class="row  p-3">
+            <div class="col-md-4 col-6">
+               <span class="text-muted">Stationary </span>
+            </div>
+            <div class="col-md-4 col-6">
+               <span class="text-muted">___ </span>
+            </div>
+            <div class="col-md-4 col-6">
+               <span class="text-muted">Moving </span>
+            </div>
+         </div>
+         
+         <div class="row  p-3">
+            <div class="col-md-4 col-6">
+               <div class=" d-flex">
+                  <h1 class="text-primary stationaryDistance_group" id="stationaryDistance">-</h1>
+                  <h1 class="text-primary stationaryDistance_group">Cm</h1>
+               </div>
+               <span class="text-muted">distance / energy </span><span class="text-muted" id="stationaryEnergy">-</span><span class="text-muted"></span>
+            </div>
+            <div class="col-md-4 col-6 mt-4 mt-md-0">
+               <div class=" d-flex">
+                  <h1 class="text-primary"  id="timer_lapsed"></h1>
+               </div>
+               <span class="text-muted" id="current_file_process"></span>
+            </div>
+            <div class="col-md-4 col-6">
+               <div class=" d-flex">
+                  <h1 class="text-primary movingDistance_group"  id="movingDistance">-</h1>
+                  <h1 class="text-primary movingDistance_group">Cm</h1>
+               </div>
+               <span class="text-muted">distance / energy </span><span class="text-muted" id="movingEnergy">-</span><span class="text-muted"></span>
+            </div>
+         </div> -->
+         <!-- <div class="row  p-3">
+            <div class="col-12">
+               <div class="progress " style="height: 30px;">
+                  <div class="progress-bar" style="width: 100%" aria-valuenow="100" id="progress-bar"></div>
+               </div>
+            </div>
+         </div> -->
+         <!-- <div class="row p-3 justify-content-md-center">
+            <div class="btn-group mt-1 col-12" role="group">
+                  <button id="action_show_sd_card" type="button" class="btn text-vplab-dark border btn-lg">
+                     <svg class="bi align-middle" width="20" height="20">
+                        <use xlink:href="#sd_card_icon"></use>
+                     </svg>
+                     <span id="action_show_sd_card_txt">Print<span id="files_letter_s"></span></span>
+                  </button>
+                   <button id="action_pause" type="button" class="btn border  text-warning btn-lg">
+                     <svg class="bi align-middle text-warning" width="24" height="24">
+                        <use xlink:href="#pause_icon"></use>
+                     </svg>
+                     Pause
+                  </button>                 
+                  <button id="action_stop" type="button" class="btn border  text-danger btn-lg">
+                     <svg class="bi align-middle text-danger" width="24" height="24">
+                        <use xlink:href="#stop_icon"></use>
+                     </svg>
+                     Stop
+                  </button>
+                  <button type="button" class="no-click btn border btn-lg text-vplab-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Z height">
+                     <svg class="bi align-middle" width="20" height="20">
+                        <use xlink:href="#z_icon">0</use>
+                     </svg>
+                     Z<span id="printing_z_height">0</span>
+                  </button>
+                  <button type="button" class="no-click btn border btn-lg text-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="feed rate">
+                     <svg class="bi align-middle" width="20" height="20">
+                        <use xlink:href="#speed_icon"></use>
+                     </svg>
+                     <span id="printing_feedrate">0</span>
+                  </button> 
+                  <button type="button" class="no-click btn border btn-lg text-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="flow rate">
+                     <svg class="bi align-middle" width="20" height="20" transform='rotate(180)'>
+                        <use xlink:href="#home_icon"></use>
+                     </svg>
+                     <span id="printing_flow">0</span>
+                  </button>                
+            </div>
+         </div> -->
+         <div class="row  p-4">
+            <div class="row-cols-md-6 col-md-6 mb-5">
+               <canvas class="col-6" id="StationnaryChart"></canvas>
+            </div>
+            <div class="row-cols-md-6 col-md-6 mb-5">
+
+               <canvas class="col-6" id="MovingChart"></canvas>
+            </div>
+
+         <div class="row  p-4">
+
+            
+            <div class="col-sm-6 col-md-6 mb-6">
+               <input type="number" id="gate1" min="1" max="1000">
+            
+            
+               <input type="number" id="gate2"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate3"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate4"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate5"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate6"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate7"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate8"  min="1" max="1000">
+            
+            
+               <input type="number" id="gate9"  min="1" max="1000">
+            </div>
+
+
+            <div class="col-sm-6 col-md-6 mb-6">
+               <input type="number" id="gatem1"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem2"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem3"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem4"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem5"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem6"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem7"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem8"  min="1" max="1000">
+            
+            
+               <input type="number" id="gatem9"  min="1" max="1000">
+            </div>
+            
+            <div class="alert_settings_changed alert bg-vplab-light text-white m-3 row pb-2" role="alert" style="display:none;">
+               <div class="col-10 mt-2">The settings have been changed.</div>
+               <button type="button" class="settings_changed_button col-2 btn btn-primary col-sm-12 col-md-12 mb-3">Save</button>
+            </div>  
+         </div>
+         <div class="row  p-4">  
+            <div class="col-sm-12 col-md-12 mb-12">
+               <canvas class="col-12" id="Stationary_chart"></canvas>
+            </div>
+            <div class="col-sm-12 col-md-12 mb-12">
+               <canvas class="col-12" id="Moving_chart"></canvas>
+            </div>
+             <!-- <div class="col-sm-12 col-md-6" id="feed_url">
+               <canvas class="col-12" id="position_chart"></canvas> 
+            </div>  -->
+         </div>   
+             
+      </div>     
+      </div>
+
+
+      <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_console">
+         <span class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none justify-content-between">
+         <span class="fs-4 fw-semibold">Console</span>
+         <span class="fs-7 text-secondary">
+               <select class="me-2" onchange="changeBaud()" id="baud" name="baud">
+                  <option value=4800>4800</option>
+                  <option value=9600>9600</option>
+                  <option value=14400>14400</option>
+                  <option value=19200>19200</option>
+                  <option value=28800>28800</option>
+                  <option value=38400>38400</option>
+                  <option value=57600>57600</option>
+                  <option value=115200>115200</option>
+               </select>
+         </span>
+         </span>
+         <div class="p-2 flex-grow-1"><textarea  class="h-100 text-secondary form-control h-90 flex-grow-1" id="console_output" rows="3"></textarea></div>
+         <div class="mt-auto m-2">
+            <div class="row">
+               <div class="col-9 col-lg-11"><input id="console_input" type="text" class="form-control" id="gcode_command" placeholder="G-Code Command" maxlength="" autocomplete="off"></div>
+               <div class="col-3 col-lg-1"><button id="console_input_send_button" type="submit" class="btn btn-primary mb-2">SEND</button></div>
+            </div>
+         </div>
+      </div>
+       <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_advanced">
+
+              <!-- <link rel='icon' type='image/png' sizes='16x16' href='data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIdUOc6IVTvpiFU654hVOuaIVTvkiVU74IdUOsqFUDaMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIVDvli1c9/4pWPf+KVj3/ilY9/4pXPf+LVz3/jVk+/4lWPPaBSS5pAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgk064oVRPf+EUDz/hFA8/4RQPP98Rz3/fUk8/4VRPP+KVzz/jVk+/4ROMXwAAAAA/8s1///LNf//yzX//8s1///KM///yjL//8oy///KMv//yjL//8ky//C4Nf+wfjr/f0o8/4pWPP+LVz3/AAAAAP/FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xjP//8wy/76LOf+DTzz/jFg9/4ZTOLX/xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xzP/f0s8/4pWPP+IVTvj/8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8oy/6JwO/+HUzz/ilY88//FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///KMv+fbTv/h1Q8/4pWPPP/xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///GM///xTP/fUg8/4pWPP+JVjri/8Yz///GM///xjP//8Yz///GM///xjP//8Yz///GM///xjP//8Yz///HM///yzL/sX46/4RRPP+MWD3/h1I4sf/GMvT/xjL0/8Yy9P/FMvP4wDP99740//e+NP/3vjT/9740//O6NP/dpzf/m2k7/4JOPP+KVjz/iVY8/wAAAAAAAAAAAAAAAAAAAAAAAAAAd0A74X5IPf98Rzz/fEc8/3xHPP99SDz/gEw8/4dTPP+LVz3/jFg9/4FKL2sAAAAAAAAAAAAAAAAAAAAAAAAAAIhVOuaMWD7/i1c9/4tXPf+LVz3/i1c9/4xYPf+OWT//iFQ75XxDJ0gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHUji2iFQ6zohTOc2HVDnMh1M5yodUOsaGUjerf0YqVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPAPAADwAwAA8AEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA8AEAAPADAADwDwAA//8AAA=='/>
+            
+            <style>*,::after,::before{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','Liberation Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button{text-transform:none}[type=submit],button{-webkit-appearance:button}::-moz-focus-inner{padding:0;border-style:none}.container{width:100%;padding-right:var(--bs-gutter-x,.75rem);padding-left:var(--bs-gutter-x,.75rem);margin-right:auto;margin-left:auto}@media (min-width:576px){.container{max-width:540px}}@media (min-width:768px){.container{max-width:720px}}@media (min-width:992px){.container{max-width:960px}}@media (min-width:1200px){.container{max-width:1140px}}@media (min-width:1400px){.container{max-width:1320px}}.row{--bs-gutter-x:1.5rem;--bs-gutter-y:0;display:flex;flex-wrap:wrap;margin-top:calc(var(--bs-gutter-y) * -1);margin-right:calc(var(--bs-gutter-x)/ -2);margin-left:calc(var(--bs-gutter-x)/ -2)}.row>*{flex-shrink:0;width:100%;max-width:100%;padding-right:calc(var(--bs-gutter-x)/ 2);padding-left:calc(var(--bs-gutter-x)/ 2);margin-top:var(--bs-gutter-y)}.col-12{flex:0 0 auto;width:100%}@media (min-width:768px){.col-md-12{flex:0 0 auto;width:100%}}.form-label{margin-bottom:.5rem}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;-webkit-appearance:none;-moz-appearance:none;appearance:none;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}@media (prefers-reduced-motion:reduce){.form-control{transition:none}}.form-control:focus{color:#212529;background-color:#fff;border-color:#86b7fe;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}.form-control::-moz-placeholder{color:#6c757d;opacity:1}.form-control::placeholder{color:#6c757d;opacity:1}.form-control:disabled{background-color:#e9ecef;opacity:1}.form-floating{position:relative}.btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}@media (prefers-reduced-motion:reduce){.btn{transition:none}}.btn:hover{color:#212529}.btn:focus{outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}.btn:disabled{pointer-events:none;opacity:.65}.btn-primary{color:#fff;background-color:#0d6efd;border-color:#0d6efd}.btn-primary:hover{color:#fff;background-color:#0b5ed7;border-color:#0a58ca}.btn-primary:focus{color:#fff;background-color:#0b5ed7;border-color:#0a58ca;box-shadow:0 0 0 .25rem rgba(49,132,253,.5)}.btn-primary:active{color:#fff;background-color:#0a58ca;border-color:#0a53be}.btn-primary:active:focus{box-shadow:0 0 0 .25rem rgba(49,132,253,.5)}.btn-primary:disabled{color:#fff;background-color:#0d6efd;border-color:#0d6efd}.btn-lg{padding:.5rem 1rem;font-size:1.25rem;border-radius:.3rem}.d-flex{display:flex!important}.d-inline-flex{display:inline-flex!important}.border-bottom{border-bottom:1px solid #dee2e6!important}.flex-column{flex-direction:column!important}.justify-content-between{justify-content:space-between!important}.align-items-center{align-items:center!important}.mt-2{margin-top:.5rem!important}.mt-3{margin-top:1rem!important}.mb-4{margin-bottom:1.5rem!important}.py-3{padding-top:1rem!important;padding-bottom:1rem!important}.pb-3{padding-bottom:1rem!important}.fs-4{font-size:calc(1.275rem + .3vw)!important}.text-decoration-none{text-decoration:none!important}.text-dark{color:#212529!important}@media (min-width:768px){.flex-md-row{flex-direction:row!important}.mt-md-0{margin-top:0!important}.ms-md-auto{margin-left:auto!important}}@media (min-width:1200px){.fs-4{font-size:1.5rem!important}}body{display:flex;flex-wrap:nowrap;height:100vh;height:-webkit-fill-available;overflow-x:auto}body>*{flex-shrink:0;min-height:-webkit-fill-available}a{color:#3d568a!important}.btn-primary{background-color:#3d568a!important}.logo{padding-left:40px;background-size:40px 18px;background-image:url('data:image/svg+xml,%3Csvg width='469' height='197' viewBox='0 0 469 197' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='469' height='197' fill='%23F2F2F2'/%3E%3Crect width='469' height='197' fill='white'/%3E%3Cpath d='M127.125 196C158.396 196 184.026 186.794 204.016 168.382C224.005 149.97 234 126.212 234 97.1091C234 68.0061 224.104 44.5455 204.312 26.7273C184.521 8.90909 158.792 0 127.125 0H63V196H127.125Z' fill='%233D568A'/%3E%3Cpath d='M0 156V40H127.837C148.103 40 164.197 45.1122 176.118 55.3365C188.039 65.5609 194 79.5962 194 97.4423C194 115.103 187.94 129.324 175.82 140.106C163.501 150.702 147.507 156 127.837 156H0Z' fill='%2332C5FF'/%3E%3Cpath d='M54.8659 136V96.0774L73.1454 119.714H77.9906L96.2701 96.0774V136H111.136V60H106.291L75.568 100.488L44.8452 60H40V136H54.8659Z' fill='white'/%3E%3Cpath d='M135.241 136V108.011C135.241 103.251 136.554 99.6253 139.181 97.1324C141.808 94.6394 145.416 93.393 150.004 93.393H154V79.9084C152.594 79.4551 150.966 79.2285 149.116 79.2285C142.826 79.2285 137.794 81.7215 134.02 86.7073V79.9084H120.256V136H135.241Z' fill='white'/%3E%3Cpath d='M284 98V1H244V98H284Z' fill='%233D568A'/%3E%3Cpath d='M284 197V98H244V197H284Z' fill='%2332C5FF'/%3E%3Cpath d='M401.669 119.703L469 1H424.805L381.5 78.7506L338.492 1H294L361.627 120L401.669 119.703Z' fill='%2332C5FF'/%3E%3Cpath d='M402 197V119.261L381.852 78L362 119.56V197H402Z' fill='%233D568A'/%3E%3C/svg%3E');background-repeat:no-repeat}.alert-danger{position:relative;padding:1rem 1rem;margin-bottom:1rem;border-radius:.25rem;color:#842029;background-color:#f8d7da;border-color:#f5c2c7;}
+            </style> -->
+            <div class='container py-3'>
+            
+              <div class='d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom' style='border-bottom:1px solid #32C5FF!important;'>
+                <a href='/' class='d-flex align-items-center text-dark text-decoration-none'><span class='fs-4 logo' style='height:19px;width:66px;'></span></a><span class='fs-4'>Configuration</span>
+                <nav class='d-inline-flex mt-2 mt-md-0 ms-md-auto'>
+                </nav>
+              </div>
+            <div class='row justify-content-between'>
+            <div class='alert-danger'>Your flash size 4000 is configured incorrectly. It should be 4000.</div>
+            <div  class='alert-success' id="status"></div>
+            <div class='col-md-6'>
+               <div class='col-6 mt-3'><label class='form-label'>MQTT host</label><input  id="host" type='text' name='host' class='form-control' value='Hoang Vuong'></div>
+               <div class='col-6 mt-3'><label class='form-label'>MQTT port</label><input  id="port" type='text' name='port' class='form-control' value='' autocomplete='off'></div>
+               <div class='form-floating'><br/><button class='btn btn-primary btn-lg' id="connectbnt" >Connect</button><br /><br /><br /></div>
+            </div> 
+            <div class='col-md-6'>
+               <form action='/' method='post'>
+                  <div class='col-6 mt-3'><label class='form-label'>Wi-Fi Name</label><input type='text' name='ssid' class='form-control' value='Hoang Vuong'></div>
+                  <div class='col-6 mt-3'><label class='form-label'>Password</label><input type='password' name='password' class='form-control' value='' autocomplete='off'></div>
+                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
+               </form>
+             </div>
+            <div class="row  p-12"> 
+               <div class='col-12 mt-3' id="messages"></div>
+               <div class='col-12 mt-3' id="name"></div>
+            </div>
+            
+             <div class='col-md-6'>
+               <form action='/' method='post'>
+                  <div class='col-6 mt-3'><label class='form-label'>Firmware link</label><input type='text' name='fwlink' class='form-control' value='00:00:00:00'></div>
+                  <div class='col-6 mt-3'><label class='form-label'>Node name</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
+               </form>
+             </div>
+             <div class='col-md-6'>
+               <form action='/' method='post'>
+                  <div class='col-6 mt-3'><label class='form-label'>Gateway address</label><input type='text' name='gatewayaddr' class='form-control' value='00:00:00:00'></div>
+                  <div class='col-6 mt-3'><label class='form-label'>Chanel</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+
+             </div>
+
+             <div class='col-md-6'>
+                  <div class='col-6 mt-3'><label class='form-label'>Node Role</label><input type='text' name='gatewayaddr' class='form-control' value='00:00:00:00'></div>
+                  <div class='col-6 mt-3'><label class='form-label'>Chanel</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
+               </form>
+             </div>
+ 
+            </div>
+      </div>
+   </div>
+      <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_features">
+           <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom justify-content-between">
+            <span class="fs-4 fw-semibold">Device</span>
+            <span class="fs-7 text-secondary"></span>
+           </div>
+          <div class="row form-group p-3 pb-0"> 
+                <div class="col-12 col-md-6" ><strong>Wi-Fi</strong>      <p id="info_wifi"></div>
+                <div class="col-12 col-md-6"><strong>IP address</strong> <p id="info_ip_address"></p></div>
+                <div class="col-12 col-md-6"><strong>MAC address</strong><p id="info_mac_address"></p></div>
+                <div class="col-12 col-md-6" style="display:none;"><strong>Firmware</strong><p id="info_firmware" class="text-lowercase"></p></div>
+                <div class="col-12 col-md-6"><strong>Gateway version</strong><p id="info_version"></p></div>  
+                <div class="col-12 col-md-6"><strong>Interface version</strong><p>INTERFACE_VERSION</p></div>               
+                <div class="col-12 col-md-6" style="display:none;"><strong>Printer stats</strong><p id="info_stats"></p></div>
+         </div>
+          <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom">
+             <span class="fs-4 fw-semibold mt-3">Tools</span>
+          </div>
+          <div class="row form-group p-3 pb-0"> 
+                <div class="row mb-3 mt-2">
+                 <div class="row mb-3">
+                  <div class="col-12 col-md-2"><button class="btn bg-vplab-dark text-white"  id="cmd_reboot">Reboot</button></div>
+                  <div class="col-12 col-md-10">Your will need to refresh this page after rebooting the companion board.</p></div>
+                </div>  
+                 <div class="row mb-3">
+                  <div class="col-12 col-md-2"><a target="_blank" href="https://gitlab.com/VPlabca/3DPWG/-/issues"><button class="btn bg-vplab-dark text-white"  id="cmd_reboot">Report a bug</button></a></div>
+                  <div class="col-12 col-md-10" for="lastName">Please provide as much data as you can (browser, OS, error code, verions .. etc) with screenshots when possible.</p></div>
+                </div>                 
+              </div>         
+      </div>
+          <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom">
+             <span class="fs-4 fw-semibold mt-3">Donation</span>
+          </div>
+          <div class="row form-group p-3 pb-0"> 
+                <div class="row mb-3 mt-2">
+                 <div class="row mb-3">
+                  <div class="col-12 col-md-12">This project is 100% crowd-funded by people just like you. You can support it directly by using the following options or by shopping at <a href="https://store.vplab.local/" target="_blank">my store</a>. Thank you!</p></div>
+                </div>  
+                 <div class="row mb-3">
+                  <div class="col-12"><a href="https://www.patreon.com/VPlab?fan_landing=true" style="background-color:#FF424D" target="_blank" class="btn text-white mb-3">Become a Patron</a> <a style="background-color:#ffffff;color:#000000;" target="_blank" href="https://www.youtube.com/channel/UCtfYdcn8F8wfRA2BXp2FPtg/join" class="btn bg-vplab-light text-white mb-3">Become a YouTube Member</a></div>
+                </div>               
+              </div>         
+      </div>       
+      </div>  
+
+      <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+         <symbol id="home_icon" viewBox="0 0 16 16">
+            <path d="m 7.4021 6.6629 c 0.0168 -0.9072 0.037 -1.0248 0.2318 -1.3978 c 0.131 -0.2419 0.4838 -0.5813 0.7426 -0.7056 c 0.3864 -0.1882 0.4368 -0.1915 3.0072 -0.1915 c 2.3688 0 2.4595 -0.0034 2.5334 -0.1142 c 0.0504 -0.0706 0.0302 -0.3125 -0.0302 -0.3595 c -0.0437 -0.0403 -0.9173 -0.0504 -5.2651 -0.0638 l -5.2114 -0.0168 l -0.2184 -0.0739 c -0.5477 -0.1882 -0.84 -0.5712 -0.84 -1.1021 c 0 -0.5309 0.2923 -0.9139 0.84 -1.1021 l 0.2184 -0.0739 l 5.2114 -0.0168 c 4.3478 -0.0134 5.2214 -0.0235 5.2651 -0.0638 c 0.0605 -0.047 0.0806 -0.289 0.0302 -0.3595 c -0.0739 -0.1142 -0.1142 -0.1142 -5.6482 -0.1142 l -5.4802 0 l 0 -0.4536 l 0 -0.4536 l 5.5373 0.0067 l 5.5339 0.0101 l 0.1915 0.0739 c 0.5376 0.205 0.7997 0.5678 0.7997 1.1088 c 0 0.4838 -0.2688 0.8568 -0.7694 1.0584 l -0.1882 0.0773 l -5.245 0.0168 c -5.1005 0.0168 -5.2483 0.0202 -5.3189 0.0806 c -0.0974 0.0874 -0.0974 0.3226 0 0.4099 c 0.0706 0.0605 0.2184 0.0638 5.3189 0.0806 l 5.245 0.0168 l 0.1882 0.0773 c 0.5006 0.2016 0.7694 0.5746 0.7694 1.0584 c 0 0.541 -0.2621 0.9072 -0.7997 1.1088 c -0.1882 0.0706 -0.2285 0.0739 -2.6611 0.0907 c -1.8715 0.0134 -2.4931 0.0269 -2.5637 0.0605 c -0.1747 0.0739 -0.3158 0.205 -0.4133 0.383 l -0.0974 0.1781 l -0.0101 0.7997 l -0.0101 0.7963 l -0.457 0 l -0.4536 0 l 0.0168 -0.8299 z m -2.1706 10.4933 c -0.1949 -0.0706 -0.3461 -0.205 -0.4402 -0.3965 l -0.0874 -0.1747 l 0 -2.4528 l 0 -2.4562 l 0.0806 -0.168 c 0.0773 -0.1747 0.2318 -0.3293 0.3864 -0.3965 c 0.047 -0.0202 0.336 -0.047 0.6384 -0.0571 l 0.5544 -0.0168 l 0.336 -1.3339 l 0.3394 -1.3373 l 0.877 0 l 0.877 0 l 0.3125 1.2365 c 0.1714 0.6787 0.3259 1.2835 0.3427 1.344 l 0.0302 0.1075 l 0.5208 0 c 0.5779 0 0.6888 0.0269 0.8837 0.2117 c 0.0605 0.0605 0.1411 0.168 0.1747 0.2419 c 0.0605 0.1277 0.0638 0.2688 0.0638 2.6141 c 0 2.0059 -0.0101 2.4998 -0.0437 2.5872 c -0.0672 0.1579 -0.215 0.3192 -0.373 0.4032 l -0.1378 0.0739 l -2.604 0.0067 c -2.1168 0.0067 -2.6275 0 -2.7317 -0.037 z m 5.1778 -0.6518 c 0.0336 -0.0235 0.0403 -0.5242 0.0336 -2.3957 l -0.0101 -2.3654 l -2.52 0 l -2.52 0 l -0.0101 2.3486 c -0.0034 1.7069 0.0034 2.3621 0.0302 2.3923 c 0.0302 0.0403 0.4637 0.047 2.4965 0.047 c 1.3507 0 2.4763 -0.0134 2.4998 -0.0269 z"></path>
+         </symbol>
+         <symbol id="gear_fill_icon" viewBox="0 0 16 16">
+            <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+         </symbol>
+         <symbol id="info_icon" viewBox="0 0 16 16">
+             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+             <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+         </symbol>
+         <symbol id="console_icon" viewBox="0 0 16 16">
+            <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9zM3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"/>
+            <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h12z"/>
+         </symbol>
+         <symbol id="pause_icon" viewBox="0 0 16 16">
+            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+         </symbol>
+         <symbol id="stop_icon" viewBox="0 0 16 16">
+            <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+         </symbol>
+         <symbol id="speed_icon" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+         </symbol>     
+         <symbol id="reload_icon" viewBox="0 0 16 16">
+            <path d="M 6.1479 14.3856 c -1.0814 -0.2552 -2.3207 -0.972 -3.159 -1.8103 c -0.7898 -0.7898 -1.5309 -2.0169 -1.5309 -2.5272 c 0 -0.4981 0.4981 -0.9842 1.0085 -0.9842 c 0.5346 0 0.729 0.158 1.0814 0.8748 c 0.3766 0.7898 1.4094 1.7982 2.2478 2.1749 c 1.3608 0.6318 3.2926 0.5103 4.532 -0.2673 c 0.8748 -0.5589 0.8748 -0.5711 -0.1944 -1.6524 l -0.9598 -0.9598 l 2.7094 0 l 2.6973 0 l 0 2.6973 l 0 2.7094 l -0.9963 -0.9963 l -1.0085 -0.9842 l -0.5468 0.4253 c -1.6646 1.3001 -3.8637 1.7861 -5.8806 1.3001 z M 12.6603 6.4152 c -0.1458 -0.0729 -0.4495 -0.4617 -0.6561 -0.8505 c -0.4617 -0.8748 -1.3487 -1.7131 -2.2599 -2.1384 c -0.6075 -0.2916 -0.8384 -0.3281 -1.9683 -0.3281 c -1.1421 0 -1.3487 0.0365 -2.0291 0.3523 c -0.4131 0.1822 -0.8748 0.4738 -1.0206 0.6318 l -0.2795 0.3038 l 0.9598 0.9598 l 0.972 0.972 l -2.7094 0 l -2.6973 0 l 0 -2.6973 l 0 -2.7094 l 1.0085 0.9963 l 0.9963 1.0085 l 0.5468 -0.4374 c 2.7216 -2.1749 6.5853 -1.9562 9.0396 0.4981 c 0.8141 0.8141 1.5309 2.0291 1.5309 2.5636 c -0.0121 0.401 -0.1822 0.6804 -0.5711 0.8748 c -0.3159 0.1701 -0.4981 0.1701 -0.8627 0 z"/>
+         </symbol>
+         <symbol id="sd_card_icon" viewBox="0 0 16 16">
+            <path d="M 1.5149 2.9412 V 15.7554 C 1.5149 15.9764 1.694 16.1554 1.9149 16.1554 H 14.2405 C 14.4614 16.1554 14.6405 15.9764 14.6405 15.7554 V 6.9673 C 14.6405 6.7463 14.4614 6.5673 14.2405 6.5673 H 13.6855 V 5.4289 H 14.2405 C 14.4614 5.4289 14.6405 5.2498 14.6405 5.0289 V 0.4 C 14.6405 0.179 14.4614 0 14.2405 0 H 4.456 C 4.3499 0 4.2482 0.0421 4.1731 0.1172 L 1.6321 2.6583 C 1.557 2.7334 1.5149 2.835 1.5149 2.9412 Z M 12.5034 9.2914 V 13.0213 C 12.5034 13.4707 12.1391 13.835 11.6897 13.835 H 4.4656 C 4.0162 13.835 3.6518 13.4707 3.6518 13.0213 V 9.2914 C 3.6518 8.842 4.0162 8.4777 4.4656 8.4777 H 11.6897 C 12.1391 8.4778 12.5034 8.8421 12.5034 9.2914 Z M 5.9878 3.0741 H 4.6847 V 0.9565 H 5.9878 V 3.0741 Z M 7.91 3.0741 H 6.6069 V 0.9565 H 7.91 V 3.0741 Z M 9.8322 3.0741 H 8.529 V 0.9565 H 9.8322 V 3.0741 Z M 11.7543 3.0741 H 10.4512 V 0.9565 H 11.7543 V 3.0741 Z M 13.6765 3.0741 H 12.3734 V 0.9565 H 13.6765 V 3.0741 Z M 10.1054 10.5021 H 5.3363 C 5.1154 10.5021 4.9363 10.323 4.9363 10.1021 C 4.9363 9.8811 5.1154 9.7021 5.3363 9.7021 H 10.1054 C 10.3262 9.7021 10.5054 9.8811 10.5054 10.1021 C 10.5054 10.323 10.3262 10.5021 10.1054 10.5021 Z M 9.5343 12.5554 H 5.412 C 5.1911 12.5554 5.012 12.3763 5.012 12.1554 S 5.1911 11.7554 5.412 11.7554 H 9.5343 C 9.7552 11.7554 9.9343 11.9344 9.9343 12.1554 S 9.7552 12.5554 9.5343 12.5554 Z"/>
+         </symbol>
+        <symbol id="print_icon" viewBox="0 0 16 16">
+          <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+          <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+        </symbol>
+        <symbol id="z_icon" viewBox="0 0 16 16">
+          <path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z"/>
+  <path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z"/>
+         </symbol>                 
+      </svg>
+   </body>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+   <script src="js/chart.js"></script>
+   <script src="js/main.js?v=TIMESTAMP"></script>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8235E501QV"></script>
+   <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);} gtag('js', new Date());gtag('config', 'G-8235E501QV');</script>
+   <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyCh6vOMByFsQ-SlB0NVOH7NRUocW9tKYBE",
+        authDomain: "vplab-iot.firebaseapp.com",
+        databaseURL: "https://vplab-iot-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "vplab-iot",
+        storageBucket: "vplab-iot.appspot.com",
+        messagingSenderId: "1004335761492",
+        appId: "1:1004335761492:web:5d01880613ba1413d185c1",
+        measurementId: "G-WWGTHPPR2H"
+      };
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      // const analytics = getAnalytics(app);
+      import { getDatabase, ref, set , get , child} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+      
+
+      // var _senDatabnt = document.getElementById('senDatabnt');
+      // _senDatabnt.addEventListener('click', writeUserData);
+      // var _getDatabnt = document.getElementById('getDatabnt');
+      // _getDatabnt.addEventListener('click', SelectData);
+      var hostChange, portChange
+      var oldMess ="";
+      var myArray = [];
+      var myArrayFull = [];
+      var myArrayName = [];
+      var count = 100;
+      var messages = "";
+      // var _getDatabnt1 = document.getElementById('getDatabnt1');
+      // _getDatabnt1.addEventListener('click', connectFunc);
+
+      var _Connectbnt = document.getElementById('connectbnt');
+      _Connectbnt.addEventListener('click', startConnect);
+      
+      var hostLoad, portLoad;
+      var hosts = document.getElementById('host');
+      var ports = document.getElementById('port');
+      // var user = document.getElementById('user');
+      // var pass = document.getElementById('pass');
+      var periodicalTimer, lapsedTimer, checkChange
+      periodicalTimer = window.setInterval( function(){ SelectData() }, 2000)
+      // checkChange = window.setInterval( function(){ CheckChange() }, 1000)
+
+      const db = getDatabase();
+
+      hosts.onfocus = function() {
+         if(hosts.value != hostLoad){console.log("changed " + hosts.value + " " + hostLoad);hosts.style.background = "#ffead1";hostChange = 1;}
+         else{hosts.style.background = "white";hostChange = 0;}
+      }
+      hosts.onblur = function() {
+         if(hosts.value != hostLoad){console.log("changed " + hosts.value + " " + hostLoad);hosts.style.background = "#ffead1";hostChange = 1;}
+         else{hosts.style.background = "white";hostChange = 0;}
+      }
+
+      
+      ports.onfocus = function() {
+         if(ports.value != portLoad){console.log("changed " + ports.value + " " + portLoad);ports.style.background = "#ffead1";portChange = 1;}
+         else{ports.style.background = "white";portChange = 0;}
+      }
+      ports.onblur = function() {
+         if(ports.value != portLoad){console.log("changed " + ports.value + " " + portLoad);ports.style.background = "#ffead1";portChange = 1;}
+         else{ports.style.background = "white";portChange = 0;}
+      }
+      
+      function writeUserData() {
+         set(ref(db, 'mqtt/' + "configuration"), {
+            host: hosts.value,
+            port: ports.value
+            // ,user : ""
+            // ,pass : ""
+         })
+         .then(() =>{
+            alert("configuration add success");
+         })
+         .catch((error)=>{
+            alert("configuration add error");
+         });
+      }
+
+      function writeLooklineData(root, command, value, id) {
+         // console.log(root + "/" + command + "/" + value);
+
+         set(ref(db, root + "/" + command + id), {
+            data: value
+         })
+         .then(() =>{
+            // alert("configuration add success");
+         })
+         .catch((error)=>{
+            console.log("configuration add error");
+         });
+      }
+      function SelectData(){
+         const dbref = ref(db);
+         get(child(dbref,"mqtt/configuration")).then((snapshot)=>{
+            if (snapshot.exists()) {
+               // console.log(snapshot.val());
+               hosts.value = snapshot.val().host;
+               ports.value = snapshot.val().port;
+               hostLoad = snapshot.val().host;
+               portLoad = snapshot.val().port;
+            } else {
+               console.log("No data available");
+            }
+            }).catch((error) => {
+            console.error(error);
+            });
+            // document.getElementById("messages").innerHTML = "";
+            // document.getElementById("name").innerHTML = "";
+         for(var j = 0; j < 100 ; j++){
+            get(child(dbref,"Lookline/Gateway" + j)).then((snapshot)=>{
+            if (snapshot.exists()) {
+               var Data = snapshot.val().data;
+               console.log(Data + " | " + j );
+               myArrayName[j] = Data;
+               // document.getElementById("name").innerHTML += "<span> " + Data +"</span><br>";
+            } 
+            }).catch((error) => {
+            console.error(error);
+            });
+            
+            get(child(dbref,"Lookline/Update" + j)).then((snapshot)=>{
+            if (snapshot.exists()) {
+               var Data = snapshot.val().data;
+               console.log(Data + " | " + j );
+               myArrayFull[j] = Data;
+               // document.getElementById("messages").innerHTML += "<span> " + Data +"</span><br>";
+            } 
+            }).catch((error) => {
+            console.error(error);
+            });
+         }
+         clearInterval(periodicalTimer) 
+         $('#status').html('load done')
+      }
+      
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// document.addEventListener("load", StatupFunction);
+
+document.getElementById("Main_heading").onload = function() {StatupFunction()};
+function StatupFunction(){
+console.log("load page");
+SelectData();
+}
+
+var client;
+
+function startConnect(){
+  if(portChange == 1 | hostChange == 1){ writeUserData(); SelectData();}
+var clientID = "clientID - "+parseInt(Math.random() * 100);
+
+// host = document.getElementById("host").value;   
+// port = document.getElementById("port").value;  
+// userId  = document.getElementById("username").value;  
+// passwordId = document.getElementById("password").value;  
+
+document.getElementById("messages").innerHTML += "<span> Connecting to " + hosts.value + " on port " +ports.value+"</span><br>";
+document.getElementById("messages").innerHTML += "<span> Using the client Id " + clientID +" </span><br>";
+
+client = new Paho.MQTT.Client(hosts.value,Number(ports.value),clientID);
+
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+client.connect({
+ onSuccess: onConnect
+//        userName: userId,
+//       passwordId: passwordId
+});
+
+}
+
+
+
+function onConnect(){
+// topic =  document.getElementById("topic_s").value;
+
+document.getElementById("messages").innerHTML += "<span> Subscribing all topic " + "</span><br>";
+ client.subscribe("VLLooklineApp/status");
+ client.subscribe("VLLooklineApp/Status");
+ client.subscribe("VLLooklineApp/Report");
+ for(var i = 0; i < 500; i++){
+//  client.subscribe("VLLooklineApp/UpdateMVC30"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC31"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC32"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC33"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC34"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC35"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC36"+i);
+ client.subscribe("VLLooklineApp/UpdateMVC37"+i);
+ client.subscribe("VLLooklineApp/UpdateMVC38"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC39"+i);
+//  client.subscribe("VLLooklineApp/UpdateMVC40"+i);
+
+ myArray[i] = "Lookline " + i;
+ // myArrayFull[i] = "not found";
+}
+}
+
+
+
+function onConnectionLost(responseObject){
+document.getElementById("messages").innerHTML += "<span> ERROR: Connection is lost.</span><br>";
+if(responseObject !=0){
+ document.getElementById("messages").innerHTML += "<span> ERROR:"+ responseObject.errorMessage +"</span><br>";
+}
+}
+
+
+
+function onMessageArrived(message){
+// console.log("OnMessageArrived: "+message.payloadString);
+let text = message.payloadString;
+let len = text.indexOf("(");
+let result = text.slice(0, len);
+let lenName = text.indexOf(")");
+let resultName = text.slice(0, lenName);
+let resultNames = text.slice(15, lenName);
+for(var i = 0; i < count; i++){
+ if(myArray[i] == result){
+     myArrayFull[i] = message.payloadString;
+ }
+}
+for(var i = 0; i < count; i++){
+ if(myArrayName[i] != resultNames && myArrayName[i-1] != resultNames && text.slice(0, 13) == "VLLooklineApp"){
+   myArrayName[i] = resultNames;
+ }
+ else{break;}
+}
+document.getElementById("messages").innerHTML = "";var Datasave = "";
+for(var i = 0; i < count; i++){
+ if(myArrayFull[i] != null) {Datasave = myArrayFull[i];
+writeLooklineData("Lookline", "Update", Datasave, i); document.getElementById("messages").innerHTML += "<span> " + myArrayFull[i] +"</span><br>";}
+}
+document.getElementById("name").innerHTML = "";var Namesave = "";
+for(var i = 0; i < count; i++){
+ if(myArrayName[i] != null && myArrayName[i] != myArrayName[i-1]) {Namesave = myArrayName[i];  
+writeLooklineData("Lookline", "Gateway", Namesave, i);document.getElementById("name").innerHTML += "<span> " + myArrayName[i] +"</span><br>";}
+}
+
+}
+
+function startDisconnect(){
+client.disconnect();
+document.getElementById("messages").innerHTML += "<span> Disconnected. </span><br>";
+
+}
+
+function publishMessage(){
+msg = document.getElementById("Message").value;
+topic = document.getElementById("topic_p").value;
+
+Message = new Paho.MQTT.Message(msg);
+Message.destinationName = topic;
+
+client.send(Message);
+document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+" is sent </span><br>";
+
+}
+
+
+
+      // export {  publishMessage , SelectData, writeUserData, onMessageArrived};
+
+</script>
+   </html>
