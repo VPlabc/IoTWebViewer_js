@@ -158,8 +158,7 @@ var gatem= ["gatem1", "gatem2", "gatem3", "gatem4", "gatem5", "gatem6", "gatem7"
 function saveSensitive(){
   settings_setting_commands = "";
   for(var e=0; e<9;e++){
-    settings_setting_commands += "'id':" + document.getElementById("sensorID").value ;
-    settings_setting_commands += ",'gate':" + e ;
+    settings_setting_commands += "'gate':" + e ;
     settings_setting_commands += ",'stationarySensitivity':" + document.getElementById(gates[e]).value;
     settings_setting_commands += ",'motionSensitivity':" + document.getElementById(gatem[e]).value;
     settings_setting_commands += "\n";
@@ -182,8 +181,8 @@ function changeTab(id){
 function updateUI(height){
 
       $("body").width($(window).width()-4)
-      if( height > 0 ) $('#vplab_divider').height(height)
-      $("#tabs").height($(window).height())
+      //if( height > 0 ) $('#vplab_divider').height(height)
+      //$("#tabs").height($(window).height())
       $("#feed_url").height($("#Stationary_chart").height())
       $("#feed_url").height($("#Moving_chart").height())
       $("#tab_console").height($(window).height())
@@ -248,7 +247,21 @@ function connectToSocket(){
     } else if(data_type == "settings"){
       
       if( jsonObject.key && $('#settings_' + jsonObject.key ).exists() ){
-          
+          $('#settings_' + jsonObject.key).attr('maxlength',jsonObject.maxlength )
+          $('#settings_' + jsonObject.key ).val(jsonObject.value)
+          if(jsonObject.value || jsonObject.value !=""){
+              if(jsonObject.key.includes("regx"))  window[ 'settings_' + jsonObject.key ] = new RegExp(jsonObject.value)
+              else window[ 'settings_' + jsonObject.key ] = jsonObject.value
+          }else{
+              if( jsonObject.key && jsonObject.key.includes("regx")) $('#settings_' + jsonObject.key).attr('placeholder', window[ 'settings_' + jsonObject.key ].source )            
+          }
+          $('#settings_on_boot_commands').attr('placeholder', settings_on_boot_commands )
+          $('#settings_periodical_commands').attr('placeholder', settings_periodical_commands )
+          $('#settings_periodical_commands_interval').attr('placeholder', settings_periodical_commands_interval )
+          $('#settings_baud').attr('placeholder', settings_baud )
+          $('#settings_print_commands').attr('placeholder', settings_print_commands )
+          $('#settings_pause_commands').attr('placeholder', settings_pause_commands )
+          $('#settings_stop_commands').attr('placeholder',  settings_stop_commands )
       }
       else if(jsonObject.key == "baud")  updateUIBaud( jsonObject.value )
 
@@ -277,41 +290,6 @@ function connectToSocket(){
               $('.settings_changed_button').html("Save")
            }, 1000)
       }
-      
-      if( jsonObject.content == "fail" ){
-          $(".settings_changed_button").html("Save failed")
-          saving = false;
-          setTimeout(function() { 
-              $(".alert_settings_changed").hide()             
-              $('.settings_changed_button').html("Save")
-           }, 1000)
-      }
-    }
-     /* ----------------------------- Sensors  ---------------------------------- */     
-    else if(data_type == "sensors"){
-
-      // console.log(event.data);
-      var obj = JSON.parse(event.data);
-      var states = "Idle | None";
-      if(obj.state == 0){states = "Idle | None";}
-      if(obj.state == 1){states = "Active | None";}
-      if(obj.state == 2){states = "Idle | Charge";}
-      if(obj.state == 3){states = "Active | Charge";}
-      if(obj.state == 4){states = "Idle | Full";}
-      if(obj.state == 5){states = "Active | Full";}
-      
-      // document.getElementById("ds"+obj.id).innerHTML = obj.distanceStat;
-      // document.getElementById("es"+obj.id).innerHTML = obj.energyStat;
-      // document.getElementById("dm"+obj.id).innerHTML = obj.distanceMov
-      // document.getElementById("em"+obj.id).innerHTML = obj.energyMov;
-      // document.getElementById("state"+obj.id).innerHTML = states;
-      // document.getElementById("rssi"+obj.id).innerHTML = obj.rssi;
-      // document.getElementById("rh"+obj.id).innerHTML = obj.readingId;
-  
-      // document.getElementById("mtv"+obj.id).innerHTML = obj.vmt + "V | " + obj.amt + "A";
-      // document.getElementById("mainv"+obj.id).innerHTML = obj.vmain + "V | " + obj.amain + "A";
-  
-  
     }
   }
 
@@ -320,8 +298,6 @@ function connectToSocket(){
       printToJSConsole("[socket] socket.onclose")
     } else {
       printToJSConsole("[socket] Connection died")
-      connectToSocket();
-      printToJSConsole("[socket] Reconnect")
     }
     changeSocketStatus("closed")
   }
@@ -714,26 +690,7 @@ var MovingChart = new Chart("MovingChart" , {
   }
 });
 
-document.getElementById("gatem1").onchange = function() {Change()};
-document.getElementById("gatem2").onchange = function() {Change()};
-document.getElementById("gatem3").onchange = function() {Change()};
-document.getElementById("gatem4").onchange = function() {Change()};
-document.getElementById("gatem5").onchange = function() {Change()};
-document.getElementById("gatem6").onchange = function() {Change()};
-document.getElementById("gatem7").onchange = function() {Change()};
-document.getElementById("gatem8").onchange = function() {Change()};
-document.getElementById("gate1").onchange = function() {Change()};
-document.getElementById("gate2").onchange = function() {Change()};
-document.getElementById("gate3").onchange = function() {Change()};
-document.getElementById("gate4").onchange = function() {Change()};
-document.getElementById("gate5").onchange = function() {Change()};
-document.getElementById("gate6").onchange = function() {Change()};
-document.getElementById("gate7").onchange = function() {Change()};
-document.getElementById("gate8").onchange = function() {Change()};
 
-function Change() {
-  $(".alert_settings_changed").show()
-}
 function DataChartMov(v1, v2, v3, v4, v5, v6, v7, v8, v9){
   MovValues[0] =  v1;document.getElementById("gatem1").value = v1;
   MovValues[1] =  v2;document.getElementById("gatem2").value = v2;
@@ -850,8 +807,6 @@ function DataChartMov1(v1, v2, v3, v4, v5, v6, v7, v8, v9){
         // StationnaryChart.update();
         // StatValues.splice(0,9)
         }
-
-
 /* ------------------------------------ Tools -------------------------------------- */     
 
 function changeSocketStatus(new_socket_status){
@@ -1153,12 +1108,7 @@ function getWifiSignalStrength(v) {
   d = -122
   return ((100 * (m - d) * (m - d) - (m - v) * (15 * (m - d) + 62 * (m - v))) / ((m - d) * (m - d)))| 0
 }
-function getMeshSignalStrength(v) { 
-    
-  m = 215
-  d = 50
-  return ((100 * (m - d) * (m - d) - (m - v) * (15 * (m - d) + 62 * (m - v))) / ((m - d) * (m - d)))| 0
-}
+
 function changeBaud(){
 
     baud = document.getElementById("baud").value
@@ -1174,12 +1124,6 @@ function updateUIBaud(baud){
 
 jQuery.fn.exists = function(){return this.length>0;}
 
-
-
-document.getElementById("sensorID").onchange = function() {IDChange()};
-function IDChange() {
-  sendOverSocket( "{'action':'getTarget', 'id':"+ document.getElementById("sensorID").value + "}")
-}
 var statup = false;
 //________________________________________________________________
 function processData(event){
@@ -1195,37 +1139,12 @@ function processData(event){
       // document.getElementById("humidity").innerHTML = myObj["humidity"];
       // document.getElementById("pressure").innerHTML = myObj["pressure"];
       /* ------------------------- moving Distance ----------------------------------------- */
-    var State  = myObj["state"]
-    if(myObj.state == 0){states = "Idle | None";}
-    if(myObj.state == 1){states = "Active | None";}
-    if(myObj.state == 2){states = "Idle | Charge";}
-    if(myObj.state == 3){states = "Active | Charge";}
-    if(myObj.state == 4){states = "Idle | Full";}
-    if(myObj.state == 5){states = "Active | Full";}
-    if(State == 1 || State == 3 || State == 5){changePrinterStatus('active'); Sensor_status = 'active';
+    var State  = myObj["State"]
+    if(State == "1"){changePrinterStatus('active'); Sensor_status = 'active';
       }
-    if(State == 2 || State == 4 || State == 6){changePrinterStatus('idle'); Sensor_status = 'idle';}
+    if(State == "0"){changePrinterStatus('idle'); Sensor_status = 'idle';}
         
-    var valueMoving  = moviungValues = 0
-    var valueMovingEner  = maxMoving = 0
-    var valueStationDistance  = stationary = 0
-    var valueStationEner  = maxStation = 0
-    if(myObj["id"] ==  document.getElementById("sensorID").value){
-      if(myObj["type"] != "sensors") {valueMoving  = moviungValues = myObj["movingDistance"]}
-      else{valueMoving  = moviungValues = myObj["distanceMov"]}
-      if(myObj["type"] != "sensors") {valueMovingEner  = maxMoving = myObj["movingEnergy"]}
-      else{valueMovingEner  = maxMoving = myObj["energyMov"]}
-      if(myObj["type"] != "sensors") {valueStationDistance  = stationary = myObj["stationaryDistance"]}
-      else{valueStationDistance  = stationary = myObj["distanceStat"]}
-      if(myObj["type"] != "sensors") {valueStationEner  = maxStation = myObj["stationaryEnergy"]}
-      else{valueStationEner  = maxStation = myObj["energyStat"]}
-    var rssi = getMeshSignalStrength(myObj["rssi"])
-    // solar_status main_status
-    $('#current_mesh').html(rssi + "% " )  
-    $('#solar_status').html(myObj.vmt + "V | " + myObj.amt + "A")  
-    $('#main_status').html(myObj.vmain + "V | " + myObj.amain + "A")  
-
-    }
+    var valueMoving  = myObj["movingDistance"]
     if( valueMoving >= 0 &&  valueMoving < 400){
         var set_valueMoving = parseInt( $('#movingEnergy').html() )
         $('#movingDistance').html(valueMoving)      
@@ -1240,6 +1159,7 @@ function processData(event){
     /* ------------------------- moving Energy ----------------------------------------- */
 
             
+    var valueMovingEner  = myObj["movingEnergy"]
     if( valueMovingEner >= 0 &&  valueMovingEner < 400){
         var set_valueMovingEner = parseInt( $('#movingDistance').html() )
         $('#movingEnergy').html(valueMovingEner)      
@@ -1252,6 +1172,7 @@ function processData(event){
     
            /* ------------------------- stationary Distance ----------------------------------------- */
         
+    var valueStationDistance  = myObj["stationaryDistance"]
     if( valueStationDistance >= 0 &&  valueStationDistance < 400){
         var set_valueStationDistance = parseInt( $('#stationaryEnergy').html() )
         $('#stationaryDistance').html(valueStationDistance)      
@@ -1267,6 +1188,7 @@ function processData(event){
     /* ------------------------- stationary Energy  ----------------------------------------- */
 
             
+    var valueStationEner  = myObj["stationaryEnergy"]
     if( valueStationEner >= 0 &&  valueStationEner < 400){
         var set_valueStationEner = parseInt( $('#stationaryDistance').html() )
         $('#stationaryEnergy').html(valueStationEner)      
@@ -1276,24 +1198,27 @@ function processData(event){
         else Stationary_chart.data.datasets[0].data.push( {x:getCurrentHHMM(),y:valueStationEner} )
         Stationary_chart.update()   
     }   
-
+    var stationary = myObj["stationaryDistance"];
     DataChartStat1(stationary,stationary,stationary,stationary,stationary,stationary,stationary,stationary,stationary);
-    
+    var moviungValues = myObj["movingDistance"];
     DataChartMov1(moviungValues,moviungValues,moviungValues,moviungValues,moviungValues,moviungValues,moviungValues,moviungValues,moviungValues);
     
+    var maxStation= myObj["stationaryEnergy"];
     DataCharmaxtStat(maxStation,maxStation,maxStation,maxStation,maxStation,maxStation,maxStation,maxStation,maxStation);
 
+    var maxMoving = myObj["movingEnergy"];
     DataCharmaxMov(maxMoving,maxMoving,maxMoving,maxMoving,maxMoving,maxMoving,maxMoving,maxMoving,maxMoving);
 
     // DataChartMov(myObj["mov0"],myObj["mov1"],myObj["mov2"],myObj["mov3"],myObj["mov4"],myObj["mov5"],myObj["mov6"],myObj["mov7"],myObj["mov8"]);
     // DataChartStat(myObj["stat0"],myObj["stat1"],myObj["stat2"],myObj["stat3"],myObj["stat4"],myObj["stat5"],myObj["stat6"],myObj["stat7"],myObj["stat8"]);
     if(myObj["stat0"] != null) {
-      DataChartMov(myObj["mov0"],myObj["mov1"],myObj["mov2"],myObj["mov3"],myObj["mov4"],myObj["mov5"],myObj["mov6"],myObj["mov7"],myObj["mov8"]);
-      DataChartStat(myObj["stat0"],myObj["stat1"],myObj["stat2"],myObj["stat3"],myObj["stat4"],myObj["stat5"],myObj["stat6"],myObj["stat7"],myObj["stat8"]);
-      }
-    // $(".alert_settings_changed").show()
+    DataChartMov(myObj["mov0"],myObj["mov1"],myObj["mov2"],myObj["mov3"],myObj["mov4"],myObj["mov5"],myObj["mov6"],myObj["mov7"],myObj["mov8"]);
+    DataChartStat(myObj["stat0"],myObj["stat1"],myObj["stat2"],myObj["stat3"],myObj["stat4"],myObj["stat5"],myObj["stat6"],myObj["stat7"],myObj["stat8"]);
+    
+    }
+    $(".alert_settings_changed").show()
     if(saving == false) {
-      sendOverSocket( "{'action':'settings', 'command':'done'}" )
+    // sendOverSocket( "{'action':'settings', 'command':'done'}" )
     }
 }
 

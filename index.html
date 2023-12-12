@@ -13,72 +13,43 @@
    <body>
       <div class="d-flex flex-column" style="width: 4.5rem;"  id="tabs">
          <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-            <li><a href="https://www.vplab.local" target="_blank" class="nav-link py-3 border-bottom"><img class="logo" src="img/VPlab_logo.png"></a></li>
-            <li><a id="home" href="#home"  class="nav-link py-3 border-bottom active"><svg class="bi" width="24" height="24" transform="rotate(180)"><use xlink:href="#home_icon"></use></svg></a>
+            <li><a href="https://www.vplab.local" target="_blank" class="nav-link py-3 border-bottom"><img class="logo" width="24" height="24" src="img/VPlab_logo.png"></a></li>
+            <li><a id="home" href="#home"  class="nav-link py-3 border-bottom active"><svg class="bi" width="24" height="24" transform="rotate(0)"><use xlink:href="#home_icon"></use></svg></a>
             </li>
-            <!-- <li><a id="sd_card"  href="#sd_card"  class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#sd_card_icon"></use></svg></a></li> -->
+            <li><a id="sd_card"  href="#sd_card"  class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#mainboard_icon"></use></svg></a></li>
+            <li><a id="wifi"     href="#wifi_card"  class="nav-link py-3 border-bottom">     <svg class="bi" width="24" height="24"><use xlink:href="#wifi_icon"></use></svg></a></li>
+            <li><a id="broad"    href="#broad_card"  class="nav-link py-3 border-bottom">    <svg class="bi" width="24" height="24"><use xlink:href="#broadcast_icon"></use></svg></a></li>
             <li><a id="console"  href="#console"  class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#console_icon"></use></svg></a></li>
             <li><a id="advanced" href="#advanced" class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"> <use xlink:href="#gear_fill_icon"></use></svg></a></li>
             <li><a id="features" href="#features" class="nav-link py-3 border-bottom">       <svg class="bi" width="24" height="24"><use xlink:href="#info_icon"></use></svg></a></li>
          </ul>
       </div>
       <div class="d-flex vplab_divider" id="vplab_divider"></div>
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
       <div class="a_tab m-2 d-flex flex-column align-items-stretch" style="flex: 1;" id="tab_home">
          <div class="row  p-3"> 
-            <div class="col-md-3 col-6 mt-4 mt-md-0">
+            <div class="col-md-3 col-4 mt-4 mt-md-0">
             <h1 class="text-vplab-light text-capitalize" id="Connect_status">Offline</h1>
             <span class="text-muted" id="current_file_name"></span>
             <span class="" id="busy_box"></span>
             </div>
-            <div class="col-md-3 col-6 mt-4 mt-md-0">
+            <div class="col-md-3 col-4 mt-4 mt-md-0">
             <h1 class="text-vplab-light text-capitalize" id="Sensor_status">Offline</h1>
-            <span class="text-muted" id="current_file_name"></span>
-            <span class="" id="busy_box"></span>
+            <span class="text-muted" id="current_mesh"></span>
+            <span class="" id="busy_box1"></span>
+            </div>
+            <div class="col-md-3 col-4 mt-4 mt-md-0">
+               <div class="row  p-3"> 
+               <span class="text-muted" id="solar_status">0/0</span>
+               <span class="text-muted text-capitalize" id="main_status">0/0</span>
+               </div>
+               <div class="row  p-3"> 
+               <span class="text-muted" >ID</span>
+               <input  class="text-muted text-capitalize" type="number" id="sensorID"  min="1" max="1000">
+               </div>
+               <span class="" id="busy_box2"></span>
             </div>
          </div>
-         <style>
-            .content {
-                padding: 50px;
-            }
-            .card-grid {
-                max-width: 800px;
-                margin: 0 auto;
-                display: grid;
-                grid-gap: 2rem;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-            .card {
-               border-radius: 25px;
-               padding: 20px;
-                background-color: white;
-                box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
-            }
-            .card-title {
-                font-size: 1.2rem;
-                font-weight: bold;
-                color: #034078
-            }
-            .reading {
-               align-self: center;
-                font-size: 1.2rem;
-                color: #1282A2;
-            }
-            #messages {
-               margin-top: 12px;
-               margin-bottom: 12px;
-               padding: 12px;
-               width:100%;
-               display: inline-block;
-               border:1px solid black;
-               max-height: 250px;
-               min-height: 250px;
-               overflow: scroll;
-            }
-            #messages span {
-               overflow-y: scroll;
-               overflow: scroll;
-            }
-         </style>
          <div class="row  p-4">
             <div class="col-sm-6 col-md-6 mb-5">
                 <div class="card">
@@ -269,6 +240,7 @@
       </div>
 
 
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
       <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_console">
          <span class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none justify-content-between">
          <span class="fs-4 fw-semibold">Console</span>
@@ -293,6 +265,23 @@
             </div>
          </div>
       </div>
+
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
+      <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_wifi">
+
+         <div class='col-md-6'>
+            <form action='/' method='post'>
+               <div class='col-6 mt-3'><label class='form-label'>Wi-Fi Name</label><input type='text' name='ssid' class='form-control' value='Hoang Vuong'></div>
+               <div class='col-6 mt-3'><label class='form-label'>Password</label><input type='password' name='password' class='form-control' value='' autocomplete='off'></div>
+               <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
+            </form>
+          </div>
+      </div>
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
+      <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_broad">
+
+      </div>
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
        <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_advanced">
 
               <!-- <link rel='icon' type='image/png' sizes='16x16' href='data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIdUOc6IVTvpiFU654hVOuaIVTvkiVU74IdUOsqFUDaMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIVDvli1c9/4pWPf+KVj3/ilY9/4pXPf+LVz3/jVk+/4lWPPaBSS5pAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgk064oVRPf+EUDz/hFA8/4RQPP98Rz3/fUk8/4VRPP+KVzz/jVk+/4ROMXwAAAAA/8s1///LNf//yzX//8s1///KM///yjL//8oy///KMv//yjL//8ky//C4Nf+wfjr/f0o8/4pWPP+LVz3/AAAAAP/FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xjP//8wy/76LOf+DTzz/jFg9/4ZTOLX/xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xzP/f0s8/4pWPP+IVTvj/8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8oy/6JwO/+HUzz/ilY88//FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///KMv+fbTv/h1Q8/4pWPPP/xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///FM///xTP//8Uz///GM///xTP/fUg8/4pWPP+JVjri/8Yz///GM///xjP//8Yz///GM///xjP//8Yz///GM///xjP//8Yz///HM///yzL/sX46/4RRPP+MWD3/h1I4sf/GMvT/xjL0/8Yy9P/FMvP4wDP99740//e+NP/3vjT/9740//O6NP/dpzf/m2k7/4JOPP+KVjz/iVY8/wAAAAAAAAAAAAAAAAAAAAAAAAAAd0A74X5IPf98Rzz/fEc8/3xHPP99SDz/gEw8/4dTPP+LVz3/jFg9/4FKL2sAAAAAAAAAAAAAAAAAAAAAAAAAAIhVOuaMWD7/i1c9/4tXPf+LVz3/i1c9/4xYPf+OWT//iFQ75XxDJ0gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHUji2iFQ6zohTOc2HVDnMh1M5yodUOsaGUjerf0YqVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPAPAADwAwAA8AEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA8AEAAPADAADwDwAA//8AAA=='/>
@@ -301,55 +290,53 @@
             </style> -->
             <div class='container py-3'>
             
-              <div class='d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom' style='border-bottom:1px solid #32C5FF!important;'>
-                <a href='/' class='d-flex align-items-center text-dark text-decoration-none'><span class='fs-4 logo' style='height:19px;width:66px;'></span></a><span class='fs-4'>Configuration</span>
-                <nav class='d-inline-flex mt-2 mt-md-0 ms-md-auto'>
-                </nav>
-              </div>
+            <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom">
+               <span class="fs-4 fw-semibold mt-3">MQTT config</span>
+            </div>
             <div class='row justify-content-between'>
-            <div class='alert-danger'>Your flash size 4000 is configured incorrectly. It should be 4000.</div>
-            <div  class='alert-success' id="status"></div>
-            <div class='col-md-6'>
-               <div class='col-6 mt-3'><label class='form-label'>MQTT host</label><input  id="host" type='text' name='host' class='form-control' value='Hoang Vuong'></div>
-               <div class='col-6 mt-3'><label class='form-label'>MQTT port</label><input  id="port" type='text' name='port' class='form-control' value='' autocomplete='off'></div>
-               <div class='form-floating'><br/><button class='btn btn-primary btn-lg' id="connectbnt" >Connect</button><br /><br /><br /></div>
+            <!-- <div class='alert-danger'>Your flash size 4000 is configured incorrectly. It should be 4000.</div> -->
+           
+            <!-- <div class="card"> -->
+            <div class="row g-3">
+               <div class='col-md-6'>
+               <label class='form-label'>host</label><input  id="host" type='text' name='host' class='form-control' value='Hoang Vuong'>
+               </div>
+               <div class='col-md-3'>
+               <label class='form-label'>port</label><input  id="port" type='text' name='port' class='form-control' value='' autocomplete='off'>
+               </div>
+               <div class='col-md-3'>
+               <div class='form-floating'><br/><button class='btn btn-primary btn-lg' id="connectbnt" style="display:block;">Connect</button><br /><br /><br /></div>
+               </div>
+
+               <div class='col-md-6'>
+               <div id="messages"></div>
+               </div>
+               <div class='col-6 mt-3' id="name"></div>
+            <div id="status"></div>
             </div> 
-            <div class='col-md-6'>
-               <form action='/' method='post'>
-                  <div class='col-6 mt-3'><label class='form-label'>Wi-Fi Name</label><input type='text' name='ssid' class='form-control' value='Hoang Vuong'></div>
-                  <div class='col-6 mt-3'><label class='form-label'>Password</label><input type='password' name='password' class='form-control' value='' autocomplete='off'></div>
-                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
-               </form>
-             </div>
-            <div class="row  p-12"> 
-               <div class='col-12 mt-3' id="messages"></div>
-               <div class='col-12 mt-3' id="name"></div>
             </div>
             
-             <div class='col-md-6'>
-               <form action='/' method='post'>
-                  <div class='col-6 mt-3'><label class='form-label'>Firmware link</label><input type='text' name='fwlink' class='form-control' value='00:00:00:00'></div>
-                  <div class='col-6 mt-3'><label class='form-label'>Node name</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
-                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
-               </form>
-             </div>
-             <div class='col-md-6'>
-               <form action='/' method='post'>
-                  <div class='col-6 mt-3'><label class='form-label'>Gateway address</label><input type='text' name='gatewayaddr' class='form-control' value='00:00:00:00'></div>
-                  <div class='col-6 mt-3'><label class='form-label'>Chanel</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+            <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom">
+               <span class="fs-4 fw-semibold mt-3">Tools</span>
+            </div>
+               <div class='row g-3'>
+                  <div class='col-md-6 '><label class='form-label'>Firmware link</label><input type='text' name='fwlink' class='form-control' value='00:00:00:00'></div>
+                  <div class='col-md-6 '><label class='form-label'>Node name</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+                  <!-- <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div> -->
 
-             </div>
-
-             <div class='col-md-6'>
-                  <div class='col-6 mt-3'><label class='form-label'>Node Role</label><input type='text' name='gatewayaddr' class='form-control' value='00:00:00:00'></div>
-                  <div class='col-6 mt-3'><label class='form-label'>Chanel</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
-                  <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
-               </form>
+                  <div class='col-md-6' ><label class='form-label'>Gateway address</label><input type='text' name='gatewayaddr' class='form-control' value='00:00:00:00'></div>
+                  <div class='col-md-3' ><label class='form-label'>Chanel</label><input type='text' name='chanel' class='form-control' value='' autocomplete='off'></div>
+                  <div class='col-md-3'><label class='form-label'>Node Role</label><input type='text' name='gatewayaddr' class='form-control' value='NODE'></div>
+                   <div class='form-floating'><br/><button class='btn btn-primary btn-lg' type='submit'>Save</button><br /><br /><br /></div>
+               </div>
+                  
+               </div>>
              </div>
  
             </div>
       </div>
    </div>
+      <!-- //////////////////////////////////////////////////////////////////////////////////////////////// -->
       <div class="a_tab m-2 d-flex flex-column align-items-stretch hidden_forced" style="flex: 1;" id="tab_features">
            <div class="d-flex align-items-center flex-shrink-0 p-3 border-vplab-light text-decoration-none border-bottom justify-content-between">
             <span class="fs-4 fw-semibold">Device</span>
@@ -395,9 +382,21 @@
       </div>  
 
       <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-         <symbol id="home_icon" viewBox="0 0 16 16">
-            <path d="m 7.4021 6.6629 c 0.0168 -0.9072 0.037 -1.0248 0.2318 -1.3978 c 0.131 -0.2419 0.4838 -0.5813 0.7426 -0.7056 c 0.3864 -0.1882 0.4368 -0.1915 3.0072 -0.1915 c 2.3688 0 2.4595 -0.0034 2.5334 -0.1142 c 0.0504 -0.0706 0.0302 -0.3125 -0.0302 -0.3595 c -0.0437 -0.0403 -0.9173 -0.0504 -5.2651 -0.0638 l -5.2114 -0.0168 l -0.2184 -0.0739 c -0.5477 -0.1882 -0.84 -0.5712 -0.84 -1.1021 c 0 -0.5309 0.2923 -0.9139 0.84 -1.1021 l 0.2184 -0.0739 l 5.2114 -0.0168 c 4.3478 -0.0134 5.2214 -0.0235 5.2651 -0.0638 c 0.0605 -0.047 0.0806 -0.289 0.0302 -0.3595 c -0.0739 -0.1142 -0.1142 -0.1142 -5.6482 -0.1142 l -5.4802 0 l 0 -0.4536 l 0 -0.4536 l 5.5373 0.0067 l 5.5339 0.0101 l 0.1915 0.0739 c 0.5376 0.205 0.7997 0.5678 0.7997 1.1088 c 0 0.4838 -0.2688 0.8568 -0.7694 1.0584 l -0.1882 0.0773 l -5.245 0.0168 c -5.1005 0.0168 -5.2483 0.0202 -5.3189 0.0806 c -0.0974 0.0874 -0.0974 0.3226 0 0.4099 c 0.0706 0.0605 0.2184 0.0638 5.3189 0.0806 l 5.245 0.0168 l 0.1882 0.0773 c 0.5006 0.2016 0.7694 0.5746 0.7694 1.0584 c 0 0.541 -0.2621 0.9072 -0.7997 1.1088 c -0.1882 0.0706 -0.2285 0.0739 -2.6611 0.0907 c -1.8715 0.0134 -2.4931 0.0269 -2.5637 0.0605 c -0.1747 0.0739 -0.3158 0.205 -0.4133 0.383 l -0.0974 0.1781 l -0.0101 0.7997 l -0.0101 0.7963 l -0.457 0 l -0.4536 0 l 0.0168 -0.8299 z m -2.1706 10.4933 c -0.1949 -0.0706 -0.3461 -0.205 -0.4402 -0.3965 l -0.0874 -0.1747 l 0 -2.4528 l 0 -2.4562 l 0.0806 -0.168 c 0.0773 -0.1747 0.2318 -0.3293 0.3864 -0.3965 c 0.047 -0.0202 0.336 -0.047 0.6384 -0.0571 l 0.5544 -0.0168 l 0.336 -1.3339 l 0.3394 -1.3373 l 0.877 0 l 0.877 0 l 0.3125 1.2365 c 0.1714 0.6787 0.3259 1.2835 0.3427 1.344 l 0.0302 0.1075 l 0.5208 0 c 0.5779 0 0.6888 0.0269 0.8837 0.2117 c 0.0605 0.0605 0.1411 0.168 0.1747 0.2419 c 0.0605 0.1277 0.0638 0.2688 0.0638 2.6141 c 0 2.0059 -0.0101 2.4998 -0.0437 2.5872 c -0.0672 0.1579 -0.215 0.3192 -0.373 0.4032 l -0.1378 0.0739 l -2.604 0.0067 c -2.1168 0.0067 -2.6275 0 -2.7317 -0.037 z m 5.1778 -0.6518 c 0.0336 -0.0235 0.0403 -0.5242 0.0336 -2.3957 l -0.0101 -2.3654 l -2.52 0 l -2.52 0 l -0.0101 2.3486 c -0.0034 1.7069 0.0034 2.3621 0.0302 2.3923 c 0.0302 0.0403 0.4637 0.047 2.4965 0.047 c 1.3507 0 2.4763 -0.0134 2.4998 -0.0269 z"></path>
+         <symbol id="mainboard_icon" viewBox="0 0 16 16">
+            <path d="M11.5 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m2 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m-10 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zM5 3a1 1 0 0 0-1 1h-.5a.5.5 0 0 0 0 1H4v1h-.5a.5.5 0 0 0 0 1H4a1 1 0 0 0 1 1v.5a.5.5 0 0 0 1 0V8h1v.5a.5.5 0 0 0 1 0V8a1 1 0 0 0 1-1h.5a.5.5 0 0 0 0-1H9V5h.5a.5.5 0 0 0 0-1H9a1 1 0 0 0-1-1v-.5a.5.5 0 0 0-1 0V3H6v-.5a.5.5 0 0 0-1 0zm0 1h3v3H5zm6.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+            <path d="M1 2a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-2H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 9H1V8H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6H1V5H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 2zm1 11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/>
          </symbol>
+         <symbol id="broadcast_icon" viewBox="0 0 16 16">
+            <path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707m2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708m5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708m2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8"/>
+         </symbol>
+         <symbol id="wifi_icon" viewBox="0 0 16 16">
+            <path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"/>
+            <path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"/>
+         </symbol>
+
+         <symbol id="home_icon" viewBox="0 0 16 16">
+            <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145z"/>
+          </symbol>
          <symbol id="gear_fill_icon" viewBox="0 0 16 16">
             <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
          </symbol>
@@ -431,7 +430,7 @@
         </symbol>
         <symbol id="z_icon" viewBox="0 0 16 16">
           <path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z"/>
-  <path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z"/>
+          <path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z"/>
          </symbol>                 
       </svg>
    </body>
@@ -470,6 +469,7 @@
       var myArrayFull = [];
       var myArrayName = [];
       var count = 100;
+      var countGateway = 0;
       var messages = "";
       // var _getDatabnt1 = document.getElementById('getDatabnt1');
       // _getDatabnt1.addEventListener('click', connectFunc);
@@ -550,15 +550,17 @@
             }).catch((error) => {
             console.error(error);
             });
-            // document.getElementById("messages").innerHTML = "";
-            // document.getElementById("name").innerHTML = "";
+            document.getElementById("messages").innerHTML = "";
+            document.getElementById("name").innerHTML = "";
+            countGateway = 0;
          for(var j = 0; j < 100 ; j++){
             get(child(dbref,"Lookline/Gateway" + j)).then((snapshot)=>{
             if (snapshot.exists()) {
                var Data = snapshot.val().data;
-               console.log(Data + " | " + j );
+               // console.log(Data + " | " + j );
                myArrayName[j] = Data;
-               // document.getElementById("name").innerHTML += "<span> " + Data +"</span><br>";
+               countGateway++;
+               document.getElementById("name").innerHTML += "<span> " + myArrayName[j] +"</span><br>";
             } 
             }).catch((error) => {
             console.error(error);
@@ -567,9 +569,9 @@
             get(child(dbref,"Lookline/Update" + j)).then((snapshot)=>{
             if (snapshot.exists()) {
                var Data = snapshot.val().data;
-               console.log(Data + " | " + j );
+               // console.log(Data + " | " + j );
                myArrayFull[j] = Data;
-               // document.getElementById("messages").innerHTML += "<span> " + Data +"</span><br>";
+               document.getElementById("messages").innerHTML += "<span> " + myArrayFull[j] +"</span><br>";
             } 
             }).catch((error) => {
             console.error(error);
@@ -590,19 +592,24 @@ SelectData();
 }
 
 var client;
+var STATUS;
 
 function startConnect(){
+   STATUS = "";
   if(portChange == 1 | hostChange == 1){ writeUserData(); SelectData();}
 var clientID = "clientID - "+parseInt(Math.random() * 100);
+STATUS = "Connecting to " + hosts.value + " on port " + ports.value + '\n';
+STATUS += "Using the client Id " + clientID 
+document.getElementById("connectbnt").style.display = "none";
 
+document.getElementById("connectbnt").style.enable = "none";
 // host = document.getElementById("host").value;   
 // port = document.getElementById("port").value;  
 // userId  = document.getElementById("username").value;  
 // passwordId = document.getElementById("password").value;  
-
-document.getElementById("messages").innerHTML += "<span> Connecting to " + hosts.value + " on port " +ports.value+"</span><br>";
-document.getElementById("messages").innerHTML += "<span> Using the client Id " + clientID +" </span><br>";
-
+$('#status').html(STATUS); 
+// document.getElementById("messages").innerHTML += "<span> Connecting to " + hosts.value + " on port " +ports.value+"</span><br>";
+// document.getElementById("messages").innerHTML += "<span> Using the client Id " + clientID +" </span><br>";
 client = new Paho.MQTT.Client(hosts.value,Number(ports.value),clientID);
 
 client.onConnectionLost = onConnectionLost;
@@ -620,8 +627,9 @@ client.connect({
 
 function onConnect(){
 // topic =  document.getElementById("topic_s").value;
-
-document.getElementById("messages").innerHTML += "<span> Subscribing all topic " + "</span><br>";
+// document.getElementById("messages").innerHTML = "";
+$('#status').html('Subscribing all topic ')
+// document.getElementById("messages").innerHTML += "<span> " + "</span><br>";
  client.subscribe("VLLooklineApp/status");
  client.subscribe("VLLooklineApp/Status");
  client.subscribe("VLLooklineApp/Report");
@@ -650,6 +658,7 @@ document.getElementById("messages").innerHTML += "<span> ERROR: Connection is lo
 if(responseObject !=0){
  document.getElementById("messages").innerHTML += "<span> ERROR:"+ responseObject.errorMessage +"</span><br>";
 }
+startConnect();
 }
 
 
@@ -662,28 +671,31 @@ let result = text.slice(0, len);
 let lenName = text.indexOf(")");
 let resultName = text.slice(0, lenName);
 let resultNames = text.slice(15, lenName);
-for(var i = 0; i < count; i++){
- if(myArray[i] == result){
-     myArrayFull[i] = message.payloadString;
- }
-}
-for(var i = 0; i < count; i++){
- if(myArrayName[i] != resultNames && myArrayName[i-1] != resultNames && text.slice(0, 13) == "VLLooklineApp"){
-   myArrayName[i] = resultNames;
- }
- else{break;}
-}
-document.getElementById("messages").innerHTML = "";var Datasave = "";
-for(var i = 0; i < count; i++){
- if(myArrayFull[i] != null) {Datasave = myArrayFull[i];
-writeLooklineData("Lookline", "Update", Datasave, i); document.getElementById("messages").innerHTML += "<span> " + myArrayFull[i] +"</span><br>";}
-}
-document.getElementById("name").innerHTML = "";var Namesave = "";
-for(var i = 0; i < count; i++){
- if(myArrayName[i] != null && myArrayName[i] != myArrayName[i-1]) {Namesave = myArrayName[i];  
-writeLooklineData("Lookline", "Gateway", Namesave, i);document.getElementById("name").innerHTML += "<span> " + myArrayName[i] +"</span><br>";}
-}
-
+   for(var i = 0; i < count; i++){
+      if(myArray[i] == result){
+         myArrayFull[i] = message.payloadString;
+      }
+   }
+   if(text.slice(0, 13) == "VLLooklineApp"){
+      myArrayName[countGateway] = resultNames;
+      console.log(resultNames + '\n' + " | "+ countGateway);
+   }
+   var Datasave = "";
+   for(var i = 0; i < count; i++){
+      if(myArrayFull[i] != null) {Datasave = myArrayFull[i];
+         writeLooklineData("Lookline", "Update", Datasave, i); 
+         // document.getElementById("messages").innerHTML += "<span> " + myArrayFull[i] +"</span><br>";
+      }
+   }
+   var Namesave = "";
+   for(var i = 0; i < count; i++){
+      if(myArrayName[i] != null && myArrayName[i] != myArrayName[i-1]) {Namesave = myArrayName[i];  
+         writeLooklineData("Lookline", "Gateway", Namesave, i);
+         //document.getElementById("name").innerHTML += "<span> " + myArrayName[i] +"</span><br>";
+      }
+   }
+   SelectData();
+   $('#status').html('MQTT Connected');
 }
 
 function startDisconnect(){
