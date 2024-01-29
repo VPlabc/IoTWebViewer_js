@@ -1,0 +1,204 @@
+<!DOCTYPE HTML><html>
+<head>
+  <title>ESP-NOW DASHBOARD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="icon" href="data:,">
+  <style>
+    html {font-family: Arial; display: inline-block; text-align: center;}
+    p {  font-size: 1.2rem;}
+    body {  margin: 0;}
+    .topnav { overflow: hidden; background-color: #2f4468; color: white; font-size: 1.7rem; }
+    .content { padding: 20px; }
+    .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }
+    .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .reading { font-size: 2.8rem; }
+    .packet { color: #bebebe; }
+    .card.temperature { color: #fd7e14; }
+    .card.humidity { color: #1b78e2; }
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <h3>ESP-NOW DASHBOARD</h3>
+  </div>
+  <div class="content">
+    <div class="cards">
+      <div class="card temperature">
+        <h4><i class="fas fa-thermometer-half"></i> BOARD #1</h4>
+        <p><span class="reading"><span id="ds1"></span></span></p>
+        <p class="packet">energy: <span id="es1"></span></p>
+        <p><span class="reading"><span id="dm1"></span></span></p>        
+        <p class="packet">energy: <span id="em1"></span></p>
+        <p class="packet">State: <span id="state1"></span></p>
+        <p class="packet">RSSI: <span id="rssi1"></span></p>
+        <p class="packet">Reading ID: <span id="rh1"></span></p>
+        <button id="LoadConfig_Bnt" type="button" class="btn text-vplab-dark border btn-lg">
+          <svg class="bi align-middle" width="20" height="20">
+            <use xlink:href="#sd_card_icon"></use>
+          </svg>
+      </div>
+      <div class="card temperature">
+        <h4><i class="fas fa-thermometer-half"></i> BOARD #2</h4>
+        <p><span class="reading"><span id="ds2"></span></span></p>
+        <p class="packet">energy: <span id="es2"></span></p>
+        <p><span class="reading"><span id="dm2"></span></span></p>        
+        <p class="packet">energy: <span id="em2"></span></p>
+        <p class="packet">State: <span id="state2"></span></p>
+        <p class="packet">RSSI: <span id="rssi2"></span></p>
+        <p class="packet">Reading ID: <span id="rh2"></span></p>
+      </div>
+    </div>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="mainboard_icon" viewBox="0 0 16 16">
+       <path d="M11.5 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m2 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m-10 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zM5 3a1 1 0 0 0-1 1h-.5a.5.5 0 0 0 0 1H4v1h-.5a.5.5 0 0 0 0 1H4a1 1 0 0 0 1 1v.5a.5.5 0 0 0 1 0V8h1v.5a.5.5 0 0 0 1 0V8a1 1 0 0 0 1-1h.5a.5.5 0 0 0 0-1H9V5h.5a.5.5 0 0 0 0-1H9a1 1 0 0 0-1-1v-.5a.5.5 0 0 0-1 0V3H6v-.5a.5.5 0 0 0-1 0zm0 1h3v3H5zm6.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+       <path d="M1 2a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-2H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 9H1V8H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6H1V5H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 2zm1 11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/>
+    </symbol>
+    <symbol id="home_icon" viewBox="0 0 16 16">
+       <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145z"/>
+     </symbol>
+    <symbol id="gear_fill_icon" viewBox="0 0 16 16">
+       <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+    </symbol>
+    <symbol id="info_icon" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+    </symbol>
+    <symbol id="console_icon" viewBox="0 0 16 16">
+       <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9zM3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"/>
+       <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h12z"/>
+    </symbol>
+    <symbol id="pause_icon" viewBox="0 0 16 16">
+       <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+    </symbol>
+    <symbol id="stop_icon" viewBox="0 0 16 16">
+       <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+    </symbol>
+    <symbol id="speed_icon" viewBox="0 0 16 16">
+       <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+       <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+    </symbol>     
+    <symbol id="reload_icon" viewBox="0 0 16 16">
+       <path d="M 6.1479 14.3856 c -1.0814 -0.2552 -2.3207 -0.972 -3.159 -1.8103 c -0.7898 -0.7898 -1.5309 -2.0169 -1.5309 -2.5272 c 0 -0.4981 0.4981 -0.9842 1.0085 -0.9842 c 0.5346 0 0.729 0.158 1.0814 0.8748 c 0.3766 0.7898 1.4094 1.7982 2.2478 2.1749 c 1.3608 0.6318 3.2926 0.5103 4.532 -0.2673 c 0.8748 -0.5589 0.8748 -0.5711 -0.1944 -1.6524 l -0.9598 -0.9598 l 2.7094 0 l 2.6973 0 l 0 2.6973 l 0 2.7094 l -0.9963 -0.9963 l -1.0085 -0.9842 l -0.5468 0.4253 c -1.6646 1.3001 -3.8637 1.7861 -5.8806 1.3001 z M 12.6603 6.4152 c -0.1458 -0.0729 -0.4495 -0.4617 -0.6561 -0.8505 c -0.4617 -0.8748 -1.3487 -1.7131 -2.2599 -2.1384 c -0.6075 -0.2916 -0.8384 -0.3281 -1.9683 -0.3281 c -1.1421 0 -1.3487 0.0365 -2.0291 0.3523 c -0.4131 0.1822 -0.8748 0.4738 -1.0206 0.6318 l -0.2795 0.3038 l 0.9598 0.9598 l 0.972 0.972 l -2.7094 0 l -2.6973 0 l 0 -2.6973 l 0 -2.7094 l 1.0085 0.9963 l 0.9963 1.0085 l 0.5468 -0.4374 c 2.7216 -2.1749 6.5853 -1.9562 9.0396 0.4981 c 0.8141 0.8141 1.5309 2.0291 1.5309 2.5636 c -0.0121 0.401 -0.1822 0.6804 -0.5711 0.8748 c -0.3159 0.1701 -0.4981 0.1701 -0.8627 0 z"/>
+    </symbol>
+    <symbol id="sd_card_icon" viewBox="0 0 16 16">
+       <path d="M 1.5149 2.9412 V 15.7554 C 1.5149 15.9764 1.694 16.1554 1.9149 16.1554 H 14.2405 C 14.4614 16.1554 14.6405 15.9764 14.6405 15.7554 V 6.9673 C 14.6405 6.7463 14.4614 6.5673 14.2405 6.5673 H 13.6855 V 5.4289 H 14.2405 C 14.4614 5.4289 14.6405 5.2498 14.6405 5.0289 V 0.4 C 14.6405 0.179 14.4614 0 14.2405 0 H 4.456 C 4.3499 0 4.2482 0.0421 4.1731 0.1172 L 1.6321 2.6583 C 1.557 2.7334 1.5149 2.835 1.5149 2.9412 Z M 12.5034 9.2914 V 13.0213 C 12.5034 13.4707 12.1391 13.835 11.6897 13.835 H 4.4656 C 4.0162 13.835 3.6518 13.4707 3.6518 13.0213 V 9.2914 C 3.6518 8.842 4.0162 8.4777 4.4656 8.4777 H 11.6897 C 12.1391 8.4778 12.5034 8.8421 12.5034 9.2914 Z M 5.9878 3.0741 H 4.6847 V 0.9565 H 5.9878 V 3.0741 Z M 7.91 3.0741 H 6.6069 V 0.9565 H 7.91 V 3.0741 Z M 9.8322 3.0741 H 8.529 V 0.9565 H 9.8322 V 3.0741 Z M 11.7543 3.0741 H 10.4512 V 0.9565 H 11.7543 V 3.0741 Z M 13.6765 3.0741 H 12.3734 V 0.9565 H 13.6765 V 3.0741 Z M 10.1054 10.5021 H 5.3363 C 5.1154 10.5021 4.9363 10.323 4.9363 10.1021 C 4.9363 9.8811 5.1154 9.7021 5.3363 9.7021 H 10.1054 C 10.3262 9.7021 10.5054 9.8811 10.5054 10.1021 C 10.5054 10.323 10.3262 10.5021 10.1054 10.5021 Z M 9.5343 12.5554 H 5.412 C 5.1911 12.5554 5.012 12.3763 5.012 12.1554 S 5.1911 11.7554 5.412 11.7554 H 9.5343 C 9.7552 11.7554 9.9343 11.9344 9.9343 12.1554 S 9.7552 12.5554 9.5343 12.5554 Z"/>
+    </symbol>
+   <symbol id="print_icon" viewBox="0 0 16 16">
+     <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+     <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+   </symbol>
+   <symbol id="z_icon" viewBox="0 0 16 16">
+     <path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z"/>
+<path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z"/>
+    </symbol>                 
+ </svg>
+<script>
+if (!!window.EventSource) {
+ var source = new EventSource('/events');
+ 
+ source.addEventListener('open', function(e) {
+  console.log("Events Connected");
+ }, false);
+ source.addEventListener('error', function(e) {
+  if (e.target.readyState != EventSource.OPEN) {
+    console.log("Events Disconnected");
+  }
+ }, false);
+ 
+ source.addEventListener('message', function(e) {
+  console.log("message", e.data);
+ }, false);
+ 
+ source.addEventListener('new_readings', function(e) {
+  console.log("new_readings", e.data);
+  var obj = JSON.parse(e.data);
+  var states = "Idle | None";
+  if(obj.state == 0){states = "Idle | None";}
+  if(obj.state == 1){states = "Active | None";}
+  if(obj.state == 2){states = "Idle | Charge";}
+  if(obj.state == 3){states = "Active | Charge";}
+  if(obj.state == 4){states = "Idle | Full";}
+  if(obj.state == 5){states = "Active | Full";}
+  document.getElementById("ds"+obj.id).innerHTML = obj.distanceStat;
+  document.getElementById("es"+obj.id).innerHTML = obj.energyStat;
+  document.getElementById("dm"+obj.id).innerHTML = obj.distanceMov
+  document.getElementById("em"+obj.id).innerHTML = obj.energyMov;
+  document.getElementById("state"+obj.id).innerHTML = states;
+  document.getElementById("rssi"+obj.id).innerHTML = obj.rssi;
+  document.getElementById("rh"+obj.id).innerHTML = obj.readingId;
+ }, false);
+}
+
+
+function connectToSocket(){
+  
+   if( typeof socket !== 'undefined' && socket.readyState == 1 ) return
+   printToJSConsole("[socket] connecting to ws://" + location.host + ":80")
+   $('#current_file_name').html(socket_url)
+   socket = new WebSocket("ws://" + socket_url + ":80")
+   changeSocketStatus("connecting")
+
+   /* --------------------------------- Socket ------------------------------------ */      
+
+  socket.onopen = function(e) {
+    printToJSConsole("[socket] Connected")
+    changeSocketStatus("active")
+    sendCommandsOnConnect()
+  }
+
+  socket.onmessage = function(event) {
+    processData(event );
+    changeSocketStatus("active")
+    // printToJSConsole("[socket] " + event.data)
+     try {
+        var jsonObject = JSON.parse(event.data)        
+    } catch(e) {
+        printToJSConsole("[jsonObject] error" + e)
+        return
+    }       
+    var data_type = jsonObject.type
+    
+    /* -------------------------- Printer console ------------------------------ */ 
+        
+    if(data_type == "console"){
+      $('#console_output').append(jsonObject.content) 
+      $('#console_output').append('\n') 
+      $('#console_output').scrollTop($('#console_output')[0].scrollHeight)  
+      processMessage(jsonObject.content)  
+
+    }
+  }
+
+  socket.onclose = function(event) {
+    if (event.wasClean) {
+      printToJSConsole("[socket] socket.onclose")
+    } else {
+      printToJSConsole("[socket] Connection died")
+    }
+    changeSocketStatus("closed")
+  }
+  socket.onerror = function(event) {
+      printToJSConsole("[socket] socket.onerror ")
+      printToJSConsole(event)
+      changeSocketStatus("closed")
+  }
+}
+
+
+var socket
+var socket_url = null
+
+function sendOverSocket(msg){
+  socket.send(msg)
+}
+
+  $('#LoadConfig_Bnt').click(function(event){
+    sendOverSocket( "{'action':'settings', 'command':'commit'}" )
+    console.log("load config");
+
+  }) 
+</script>
+</body>
+</html>
